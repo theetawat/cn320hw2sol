@@ -1,0 +1,68 @@
+-# CN320 Software Engineering
+-# Semester 2/2555
+-# Homework #2 - Intro to Rails
+-# Theetawat Tangkhajiwarngkoon	ID: 5210612361
+-# Sira Thaweekitpaibul		ID: 5210611967
+
+-#  This file is app/views/movies/index.html.haml
+%h1 All Movies
+
+-# Part II: RottenPotatoes enhancement
+-# #2: filter the list of movies
+
+-# code ที่เขียนเพิ่ม เพื่อเพิ่ม checkboxes
+-# คำสั่ง @all_ratings.each do |rating| หมายถึง
+-#   ดึง rating ใน array ชื่อ all_ratings มาแสดงทีละตัว โดยทำการวน loop จนครบทุกตัว
+-# คำสั่ง = rating หมายถึง
+-#   แสดง rating ที่ดึงมาบนหน้าจอ
+-# คำสั่ง = check_box_tag "ratings[#{rating}]" หมายถึง
+-#   แสดง checkboxes หลัง rating ที่ดึงมาบนหน้าจอ
+-#   ตัวแปรชื่อ ratings เก็บ rating เฉพาะตัวที่เลือกจาก checkboxes
+-# คำสั่ง @selected_ratings.include? rating หมายถึง
+-#   ไว้เช็คว่า selected_ratings ได้เลือกอะไรไว้ จะได้แสดงเหมือนเดิมเมื่อแสดงข้อมูลอีกครั้ง
+-# คำสั่ง = submit_tag 'Refresh' หมายถึง
+-#   แสดงปุ่ม Refresh บนหน้าจอ
+= form_tag movies_path, :method => :get do
+  Include:
+  - @all_ratings.each do |rating|
+    = rating
+    = check_box_tag "ratings[#{rating}]", 1, (@selected_ratings.include? rating)
+  = submit_tag 'Refresh', :id => "ratings_submit"
+
+%table#movies
+  %thead
+    %tr
+      -# Part I: RottenPotatoes enhancement
+      -# #1: Sorting the list of all movies
+
+      -# เพิ่ม code ในส่วนของ column heading ชื่อ Movie Title
+      -# คำสั่ง %th{:class => @movie_name} หมายถึง
+      -#   จะรับค่า movie_name มาจาก controller
+      -#   ถ้ามีค่าเป็น hilite ให้เปลี่ยนสี column heading เป็นสีเหลือง
+      -#   โดยจะไปเรียกไฟล์ application.css ที่ class ชื่อ hitlte
+      -# คำสั่ง link_to "Movie Title" หมายถึง
+      -#   เพิ่ม link ที่ column heading ชื่อ Movie Title
+      -# คำสั่ง movies_path(:key => "title") หมายถึง
+      -#   ส่งค่า key = title ไปที่ controller ให้รู้ว่าคลิกที่ column heading นี้
+      %th{:class => @movie_name}= link_to "Movie Title", movies_path(:key => "title")
+      %th Rating
+      -# เพิ่ม code ในส่วนของ column heading ชื่อ Release Date
+      -# คำสั่ง %th{:class => @release_name} หมายถึง
+      -#   จะรับค่า release_name มาจาก controller
+      -#   ถ้ามีค่าเป็น hilite ให้เปลี่ยนสี column heading เป็นสีเหลือง
+      -#   โดยจะไปเรียกไฟล์ application.css ที่ class ชื่อ hitlte
+      -# คำสั่ง link_to "Release Date" หมายถึง
+      -#   เพิ่ม link ที่ column heading ชื่อ Release Date
+      -# คำสั่ง movies_path(:key => "release_date") หมายถึง
+      -#   ส่งค่า key = release_date ไปที่ controller ให้รู้ว่าคลิกที่ column heading นี้
+      %th{:class => @release_name}= link_to "Release Date", movies_path(:key => "release_date")
+      %th More Info
+  %tbody
+    - @movies.each do |movie|
+      %tr
+        %td= movie.title 
+        %td= movie.rating
+        %td= movie.release_date
+        %td= link_to "More about #{movie.title}", movie_path(movie)
+
+= link_to 'Add new movie', new_movie_path
